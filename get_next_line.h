@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_get_next_line.h                                 :+:      :+:    :+:   */
+/*   get_next_line.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: radandri <radandri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/23 17:28:20 by radandri          #+#    #+#             */
-/*   Updated: 2025/08/23 18:22:38 by radandri         ###   ########.fr       */
+/*   Updated: 2025/08/30 21:49:47 by radandri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,19 @@
 # include <stdio.h>  // for FILE
 # include <stdlib.h> // for malloc, free
 # include <unistd.h> // for read, write, close
+# include <sys/uio.h>
+# include <sys/types.h>
 
+# ifndef BUFFER_SIZE
 # define BUFFER_SIZE 42
-# define file "test_file.txt"
+# endif
+
+typedef struct s_list
+{
+    char *content;
+    struct s_list *next;
+} t_list;
+
 
 // Function prototypes for utility functions
 void	*ft_memset(void *b, int c, size_t len);
