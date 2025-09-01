@@ -6,7 +6,7 @@
 /*   By: radandri <radandri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/23 17:28:15 by radandri          #+#    #+#             */
-/*   Updated: 2025/09/01 16:29:13 by radandri         ###   ########.fr       */
+/*   Updated: 2025/09/01 17:44:48 by radandri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ void read_and_stash(int fd, t_list **stash, int *readed_ptr)
         if(buf == NULL)
             return;
         *readed_ptr = (int)read(fd, buf, BUFFER_SIZE);
-        if(*stash == NULL && *readed_ptr ==  0 || *readed_ptr == -1)
+        if((*stash == NULL && *readed_ptr ==  0) || *readed_ptr == -1)
         {
             free(buf);
             return;
@@ -174,6 +174,7 @@ int found_newline(t_list *stash)
             return (1);
         i++;
     }
+    return (0);
 }
 
 void clean_stash(t_list **stash)
@@ -223,7 +224,7 @@ char *get_next_line(int fd)
     if(stash == NULL)
         return (NULL);
     // 2. extract from stash to line
-    extract_line(&stash, &line);
+    extract_line(stash, &line);
     // 3. clean up stash
     clean_stash(&stash);
     if(line[0] == '\0')

@@ -6,11 +6,11 @@
 /*   By: radandri <radandri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/23 18:24:21 by radandri          #+#    #+#             */
-/*   Updated: 2025/09/01 16:29:13 by radandri         ###   ########.fr       */
+/*   Updated: 2025/09/01 17:32:12 by radandri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../get_next_line.h"
+#include "get_next_line.h"
 #include <fcntl.h> // For open
 #include <stdio.h> // For printf, perror
 #include "get_next_line_test.h" // For file macro
