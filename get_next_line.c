@@ -6,7 +6,7 @@
 /*   By: radandri <radandri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/23 17:28:15 by radandri          #+#    #+#             */
-/*   Updated: 2025/09/01 20:23:01 by radandri         ###   ########.fr       */
+/*   Updated: 2025/09/01 20:47:25 by radandri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include <stdio.h> // REMOVE FOR PUSH
 
 // Adds a new node with the content of buf to the end of the linked list (stash).
-void add_to_stash(t_list **stash, char *buf, int readed)
+void add_to_stash(t_list **stash, char *buf)
 {
     int i;
     t_list *last;
@@ -23,15 +23,15 @@ void add_to_stash(t_list **stash, char *buf, int readed)
     new_node = malloc(sizeof(t_list));
     if(new_node == NULL)
         return;
+    new_node->content = ft_strdup(buf);
     new_node->next = NULL;
-    new_node->content = malloc(sizeof(char) * (readed + 1));
     if(new_node->content == NULL)
     {
         free(new_node);
         return;
     }
     i = 0;
-    while(buf[i] && i < readed)
+    while(buf[i])
     {
         new_node->content[i] = buf[i];
         i++;
@@ -68,7 +68,7 @@ int read_and_stash(int fd, t_list **stash_ptr)
             return (-1);
         }
         buf[bytes_read] = '\0';
-        add_to_stash(stash_ptr, buf, bytes_read);
+        add_to_stash(stash_ptr, buf);
     }
     free(buf);
     return (bytes_read);
@@ -141,15 +141,7 @@ t_list *ft_lst_get_last(t_list *stash)
     return (current);
 }
 
-int ft_strlen(const char *str)
-{
-    int len;
 
-    len = 0;
-    while (*(str++))
-        len++;
-    return (len);
-}
 
 void    free_stash(t_list *stash)
 {

@@ -6,7 +6,7 @@
 /*   By: radandri <radandri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/23 17:28:20 by radandri          #+#    #+#             */
-/*   Updated: 2025/09/01 20:18:33 by radandri         ###   ########.fr       */
+/*   Updated: 2025/09/01 20:49:59 by radandri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,11 +33,12 @@ typedef struct s_list
 int found_newline(t_list *stash);
 t_list *ft_lst_get_last(t_list *stash);
 int read_and_stash(int fd, t_list **stash_ptr);
-void add_to_stash(t_list **stash, char *buf, int readed);
+void add_to_stash(t_list **stash, char *buf);
 char* extract_line(t_list *stash);
 char* generate_line(t_list *stash);
 void clean_stash(t_list **stash);
-int ft_strlen(const char *str);
+int ft_strlen(const char *s);
+char	*ft_strdup(const char *s1);
 void free_stash(t_list *stash);
 
 
