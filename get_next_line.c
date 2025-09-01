@@ -6,7 +6,7 @@
 /*   By: radandri <radandri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/23 17:28:15 by radandri          #+#    #+#             */
-/*   Updated: 2025/09/01 17:44:48 by radandri         ###   ########.fr       */
+/*   Updated: 2025/09/01 18:28:34 by radandri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,28 +70,29 @@ void read_and_stash(int fd, t_list **stash, int *readed_ptr)
     }
 }
 
-void generate_line(char **line, t_list *stash)
+char* generate_line(t_list *stash)
 {
     int i;
     int len;
+    t_list *current;
 
     len = 0;
-    while(stash)
+    current = stash;
+    while(current)
     {
         i =0;
         while (stash->content[i])
         {
-            if(stash->content[i] == '\n')
-            {
-                len++;
-                break;
-            }
             len++;
+            if(current->content[i] == '\n')
+                break;
             i++;
         }
-        stash =stash->next;
+        if (current->content[i] == '\n')
+            break;
+        current =current->next;
     }
-    *line = malloc(sizeof(char) * (len+1));
+    return (malloc(sizeof(char) * (len+1)));
 }
 
 
@@ -103,7 +104,7 @@ void extract_line(t_list *stash, char **line_ptr)
 
     if(stash == NULL)
         return;
-    generate_line(line_ptr, stash);
+    *line_ptr = generate_line(stash);
     if(*line_ptr == NULL)
         return;
     j = 0;
