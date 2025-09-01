@@ -6,7 +6,7 @@
 /*   By: radandri <radandri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/23 17:28:15 by radandri          #+#    #+#             */
-/*   Updated: 2025/09/01 19:57:03 by radandri         ###   ########.fr       */
+/*   Updated: 2025/09/01 20:23:01 by radandri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,25 +49,29 @@ void add_to_stash(t_list **stash, char *buf, int readed)
 // Uses read() to read from the file descriptor and store the read data into a linked list (stash).
 // Continues reading until a newline character is found or the end of the file is reached.
 /* Uses read() to add characters to the stash */
-void read_and_stash(int fd, t_list **stash, int *readed_ptr)
+int read_and_stash(int fd, t_list **stash_ptr)
 {
     char *buf;
+    int bytes_read;
 
-    while(!found_newline(*stash) && *readed_ptr != 0)
+    buf = malloc(sizeof(char) * (BUFFER_SIZE + 1));
+    if (buf == NULL)
+        return (-1);
+
+    bytes_read = 1;
+    while (!found_newline(*stash_ptr) && bytes_read > 0)
     {
-        buf = malloc(sizeof(char) * (BUFFER_SIZE + 1));
-        if(buf == NULL)
-            return;
-        *readed_ptr = (int)read(fd, buf, BUFFER_SIZE);
-        if((*stash == NULL && *readed_ptr ==  0) || *readed_ptr == -1)
+        bytes_read = (int)read(fd, buf, BUFFER_SIZE);
+        if(*stash_ptr == NULL && bytes_read <=  0)
         {
             free(buf);
-            return;
+            return (-1);
         }
-        buf[*readed_ptr] = '\0';
-        add_to_stash(stash, buf, *readed_ptr);
-        free(buf);
+        buf[bytes_read] = '\0';
+        add_to_stash(stash_ptr, buf, bytes_read);
     }
+    free(buf);
+    return (bytes_read);
 }
 
 char* generate_line(t_list *stash)
@@ -223,8 +227,10 @@ char *get_next_line(int fd)
     readed = 1;
     line = NULL;
     // 1. read from fd and add to linked list
-    read_and_stash(fd, &stash, &readed);
-    if(stash == NULL)
+    readed = read_and_stash(fd, &stash);
+    if (readed == -1)
+        return (NULL);
+    if (stash == NULL)
         return (NULL);
     // 2. extract from stash to line
     line = extract_line(stash);
