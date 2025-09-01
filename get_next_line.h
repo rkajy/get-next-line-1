@@ -6,7 +6,7 @@
 /*   By: radandri <radandri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/23 17:28:20 by radandri          #+#    #+#             */
-/*   Updated: 2025/08/30 21:49:47 by radandri         ###   ########.fr       */
+/*   Updated: 2025/08/31 16:29:53 by radandri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 # define GET_NEXT_LINE_H
 
 # include <fcntl.h>  // for open
-# include <stdio.h>  // for FILE
+# include <stdio.h>  // for FILE, remove for PUSH
 # include <stdlib.h> // for malloc, free
 # include <unistd.h> // for read, write, close
 # include <sys/uio.h>
@@ -29,6 +29,16 @@ typedef struct s_list
     char *content;
     struct s_list *next;
 } t_list;
+
+int found_newline(t_list *stash);
+t_list *ft_lst_get_last(t_list *stash);
+void read_and_stash(int fd, t_list **stash);
+void add_to_stash(t_list **stash, char *buf, int readed);
+void extract_line(t_list *stash, char **line);
+void generate_line(char **line, t_list *stash);
+void clean_stash(t_list **stash);
+int ft_strlen(const char *str);
+void free_stash(t_list *stash);
 
 
 // Function prototypes for utility functions

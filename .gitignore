@@ -1,4 +1,2 @@
 *.o
 *.a
-Unit_test_gnl/*
-Manual_test_gnl/*
