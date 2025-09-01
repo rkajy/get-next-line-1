@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: radandri <radandri@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/23 17:28:15 by radandri          #+#    #+#             */
-/*   Updated: 2025/09/01 18:28:34 by radandri         ###   ########.fr       */
+/*   Updated: 2025/09/01 19:41:39 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ char* generate_line(t_list *stash)
     while(current)
     {
         i =0;
-        while (stash->content[i])
+        while (current->content[i])
         {
             len++;
             if(current->content[i] == '\n')
