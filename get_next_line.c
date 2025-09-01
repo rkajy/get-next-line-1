@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: radandri <radandri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/23 17:28:15 by radandri          #+#    #+#             */
-/*   Updated: 2025/09/01 19:41:39 by marvin           ###   ########.fr       */
+/*   Updated: 2025/09/01 19:57:03 by radandri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,16 +97,17 @@ char* generate_line(t_list *stash)
 
 
 // Extracts a line from the linked list (stash) and stores it in the provided line pointer.
-void extract_line(t_list *stash, char **line_ptr)
+char* extract_line(t_list *stash)
 {
     int i;
     int j;
+    char *line;
 
     if(stash == NULL)
-        return;
-    *line_ptr = generate_line(stash);
-    if(*line_ptr == NULL)
-        return;
+        return (NULL);
+    line = generate_line(stash);
+    if(line == NULL)
+        return (NULL);
     j = 0;
     while(stash)
     {
@@ -115,14 +116,15 @@ void extract_line(t_list *stash, char **line_ptr)
         {
             if(stash->content[i] == '\n')
             {
-                (*line_ptr)[j++] = stash->content[i];
+                line[j++] = stash->content[i];
                 break;
             }
-            (*line_ptr)[j++] = stash->content[i++];
+            line[j++] = stash->content[i++];
         }
         stash = stash->next;
     }
-    (*line_ptr)[j] = '\0';
+    line[j] = '\0';
+    return (line);
 }
 
 t_list *ft_lst_get_last(t_list *stash)
@@ -225,7 +227,7 @@ char *get_next_line(int fd)
     if(stash == NULL)
         return (NULL);
     // 2. extract from stash to line
-    extract_line(stash, &line);
+    line = extract_line(stash);
     // 3. clean up stash
     clean_stash(&stash);
     if(line[0] == '\0')

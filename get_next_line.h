@@ -6,7 +6,7 @@
 /*   By: radandri <radandri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/23 17:28:20 by radandri          #+#    #+#             */
-/*   Updated: 2025/09/01 18:30:10 by radandri         ###   ########.fr       */
+/*   Updated: 2025/09/01 19:57:11 by radandri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ int found_newline(t_list *stash);
 t_list *ft_lst_get_last(t_list *stash);
 void read_and_stash(int fd, t_list **stash, int *readed_ptr);
 void add_to_stash(t_list **stash, char *buf, int readed);
-void extract_line(t_list *stash, char **line);
+char* extract_line(t_list *stash);
 char* generate_line(t_list *stash);
 void clean_stash(t_list **stash);
 int ft_strlen(const char *str);
