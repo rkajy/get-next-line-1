@@ -6,7 +6,7 @@
 /*   By: radandri <radandri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/23 17:28:15 by radandri          #+#    #+#             */
-/*   Updated: 2025/09/02 15:50:35 by radandri         ###   ########.fr       */
+/*   Updated: 2025/09/02 17:29:49 by radandri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,24 +14,18 @@
 
 void	add_to_stash(t_list **stash, char *buf)
 {
-	int		i;
 	t_list	*last;
 	t_list	*new_node;
 
-	new_node = malloc(sizeof(t_list));
+	if (buf == NULL)
+		return ;
+	new_node = (t_list *)malloc(sizeof(t_list));
 	if (new_node == NULL)
 		return ;
 	new_node->content = ft_strdup(buf);
-	new_node->next = NULL;
 	if (new_node->content == NULL)
 		return (free(new_node));
-	i = 0;
-	while (buf[i])
-	{
-		new_node->content[i] = buf[i];
-		i++;
-	}
-	new_node->content[i] = '\0';
+	new_node->next = NULL;
 	if (*stash == NULL)
 		*stash = new_node;
 	else
@@ -53,15 +47,14 @@ int	read_and_stash(int fd, t_list **stash_ptr)
 	while (!found_newline(*stash_ptr) && bytes_read > 0)
 	{
 		bytes_read = (int)read(fd, buf, BUFFER_SIZE);
-		if (*stash_ptr == NULL && bytes_read <= 0)
-		{
-			free(buf);
-			return (-1);
-		}
+		if (bytes_read <= 0)
+			break ;
 		buf[bytes_read] = '\0';
 		add_to_stash(stash_ptr, buf);
 	}
 	free(buf);
+	if (bytes_read < 0)
+		return (-1);
 	return (bytes_read);
 }
 
@@ -99,22 +92,22 @@ char	*extract_line(t_list *stash)
 	int		i;
 	int		j;
 	char	*line;
+	int		stop;
 
 	line = generate_line(stash);
 	if (line == NULL)
 		return (NULL);
 	j = 0;
-	while (stash)
+	stop = 0;
+	while (stash && !stop)
 	{
 		i = 0;
-		while (stash->content[i])
+		while (stash->content && stash->content[i] && !stop)
 		{
+			line[j++] = stash->content[i];
 			if (stash->content[i] == '\n')
-			{
-				line[j++] = stash->content[i];
-				break ;
-			}
-			line[j++] = stash->content[i++];
+				stop = 1;
+			i++;
 		}
 		stash = stash->next;
 	}
@@ -126,14 +119,12 @@ char	*get_next_line(int fd)
 {
 	static t_list	*stash = NULL;
 	char			*line;
-	int				readed;
+	int				status;
 
 	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, &line, 0) < 0)
 		return (NULL);
-	readed = 1;
-	line = NULL;
-	readed = read_and_stash(fd, &stash);
-	if (readed == -1)
+	status = read_and_stash(fd, &stash);
+	if (status == -1)
 		return (free_stash(stash), stash = NULL, NULL);
 	if (stash == NULL)
 		return (NULL);

@@ -6,7 +6,7 @@
 /*   By: radandri <radandri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/23 17:29:30 by radandri          #+#    #+#             */
-/*   Updated: 2025/09/02 17:04:44 by radandri         ###   ########.fr       */
+/*   Updated: 2025/09/02 17:46:44 by radandri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,28 +82,34 @@ void	free_stash(t_list *stash)
 t_list	*clean_stash(t_list *stash)
 {
 	t_list	*new_stash;
-	t_list	*temp;
-	int		pos;
+	t_list	*cur;
+	int		i;
 	char	*leftover;
 
 	new_stash = NULL;
-	if (stash == NULL)
-		return (NULL);
-	temp = ft_lst_get_last(stash);
-	pos = 0;
-	while (temp->content[pos] && temp->content[pos] != '\n')
-		pos++;
-	if (temp->content[pos] == '\n' && temp->content[pos + 1] != '\0')
+	cur = stash;
+	while (cur)
 	{
-		leftover = ft_strdup(temp->content + pos + 1);
-		if (leftover == NULL)
-			return (NULL);
-		new_stash = malloc(sizeof(t_list));
-		if (new_stash == NULL)
-			return (free(leftover), NULL);
-		new_stash->content = leftover;
-		new_stash->next = NULL;
+		i = -1;
+		while (cur->content && cur->content[++i])
+		{
+			if (cur->content[i] == '\n')
+			{
+				if (cur->content[i + 1] != '\0')
+				{
+					leftover = ft_strdup(cur->content + i + 1);
+					if (!leftover)
+						return (free_stash(stash), NULL);
+					new_stash = (t_list *)malloc(sizeof(t_list));
+					if (!new_stash)
+						return (free(leftover), free_stash(stash), NULL);
+					new_stash->content = leftover;
+					new_stash->next = NULL;
+				}
+				return (free_stash(stash), new_stash);
+			}
+		}
+		cur = cur->next;
 	}
-	free_stash(stash);
-	return (new_stash);
+	return (free_stash(stash), NULL);
 }
