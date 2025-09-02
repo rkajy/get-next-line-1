@@ -6,14 +6,12 @@
 /*   By: radandri <radandri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/23 17:28:15 by radandri          #+#    #+#             */
-/*   Updated: 2025/09/02 14:10:22 by radandri         ###   ########.fr       */
+/*   Updated: 2025/09/02 14:21:27 by radandri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include <stdio.h> // REMOVE FOR PUSH
 
-// Adds a new node with the content of buf to the end of the linked list (stash).
 void add_to_stash(t_list **stash, char *buf)
 {
     int i;
@@ -46,9 +44,6 @@ void add_to_stash(t_list **stash, char *buf)
     }
 }
 
-// Uses read() to read from the file descriptor and store the read data into a linked list (stash).
-// Continues reading until a newline character is found or the end of the file is reached.
-/* Uses read() to add characters to the stash */
 int read_and_stash(int fd, t_list **stash_ptr)
 {
     char *buf;
@@ -100,7 +95,6 @@ char* generate_line(t_list *stash)
 }
 
 
-// Extracts a line from the linked list (stash) and stores it in the provided line pointer.
 char* extract_line(t_list *stash)
 {
     int i;
@@ -207,10 +201,6 @@ t_list *clean_stash(t_list *stash)
 
 char *get_next_line(int fd)
 {
-    // Repeated call using a loop to read from the file descriptor one line at a time.
-    // Should return the line was read. If there is nothing to read or an error occurs, it should return NULL.
-    // Should works as expected when reading a file and when reading from standard input (stdin).
-    // The returned line sould include the terminating \n character, expect when the end and file is reached and the file doesn't end with an newline character.
     static t_list *stash = NULL;
     char    *line;
     int readed;
@@ -219,15 +209,12 @@ char *get_next_line(int fd)
         return (NULL);
     readed = 1;
     line = NULL;
-    // 1. read from fd and add to linked list
     readed = read_and_stash(fd, &stash);
     if (readed == -1)
         return (NULL);
     if (stash == NULL)
         return (NULL);
-    // 2. extract from stash to line
     line = extract_line(stash);
-    // 3. clean up stash
     stash = clean_stash(stash);
     if(line[0] == '\0')
     {
