@@ -6,7 +6,7 @@
 /*   By: radandri <radandri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/23 17:28:15 by radandri          #+#    #+#             */
-/*   Updated: 2025/09/01 22:45:02 by radandri         ###   ########.fr       */
+/*   Updated: 2025/09/02 14:10:22 by radandri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -176,35 +176,7 @@ int found_newline(t_list *stash)
     return (0);
 }
 
-// void clean_stash(t_list **stash)
-// {
-//     t_list *last;
-//     t_list *clean_node;
-//     int i;
-//     int j;
-
-//     clean_node = malloc(sizeof(t_list));
-//     if(stash == NULL || clean_node == NULL)
-//         return;
-//     clean_node->next = NULL;
-//     last = ft_lst_get_last(*stash);
-//     i = 0;
-//     while (last->content[i] && last->content[i] != '\n')
-//         i++;
-//     if(last->content && last->content[i] == '\n')
-//         i++;
-//     clean_node->content = malloc(sizeof(char) * ((ft_strlen(last->content) - i)+ 1));
-//     if(clean_node->content == NULL)
-//         return;
-//     j = 0;
-//     while(last->content[i])
-//         clean_node->content[j++] = last->content[i++];
-//     clean_node->content[j] = '\0';
-//     free_stash(*stash);
-//     *stash = clean_node;
-// }
-
-t_list *clean_stash1(t_list *stash)
+t_list *clean_stash(t_list *stash)
 {
     t_list *new_stash = NULL;
     t_list *temp;
@@ -212,30 +184,23 @@ t_list *clean_stash1(t_list *stash)
     char *leftover;
     if (stash == NULL)
         return (NULL);
-    // Obtenir le dernier maillon de la liste
     temp = ft_lst_get_last(stash);
-    // Chercher la position du '\n' dans le dernier maillon
     pos = 0;
     while (temp->content[pos] && temp->content[pos] != '\n')
         pos++;
-    // Si un '\n' est trouvé et qu'il y a des caractères après
     if (temp->content[pos] == '\n' && temp->content[pos + 1] != '\0')
     {
-        // Copier la partie après '\n'
         leftover = ft_strdup(temp->content + pos + 1);
         if (leftover == NULL)
             return (NULL);
-        // Créer un nouveau maillon pour la nouvelle stash
         new_stash = malloc(sizeof(t_list));
         if (new_stash == NULL)
         {
-            free(leftover);
-            return (NULL);
+            return (free(leftover), NULL);
         }
         new_stash->content = leftover;
         new_stash->next = NULL;
     }
-    // Libérer toute l'ancienne stash
     free_stash(stash);
     return (new_stash);
 }
@@ -263,7 +228,7 @@ char *get_next_line(int fd)
     // 2. extract from stash to line
     line = extract_line(stash);
     // 3. clean up stash
-    stash = clean_stash1(stash);
+    stash = clean_stash(stash);
     if(line[0] == '\0')
     {
         free_stash(stash);
