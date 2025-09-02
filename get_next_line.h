@@ -6,7 +6,7 @@
 /*   By: radandri <radandri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/23 17:28:20 by radandri          #+#    #+#             */
-/*   Updated: 2025/09/02 14:52:36 by radandri         ###   ########.fr       */
+/*   Updated: 2025/09/02 20:36:08 by radandri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,9 +38,9 @@ char				*generate_line(t_list *stash);
 // Function prototypes for utility functions
 int					found_newline(t_list *stash);
 char				*ft_strdup(const char *s1);
-t_list				*ft_lst_get_last(t_list *stash);
 void				free_stash(t_list *stash);
 t_list				*clean_stash(t_list *stash);
+char				*dup_after_newline(t_list *stash);
 
 // Prototype of the redefined function
 char				*get_next_line(int fd);

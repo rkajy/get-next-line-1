@@ -6,7 +6,7 @@
 /*   By: radandri <radandri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/23 17:28:15 by radandri          #+#    #+#             */
-/*   Updated: 2025/09/02 17:29:49 by radandri         ###   ########.fr       */
+/*   Updated: 2025/09/02 20:31:45 by radandri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,9 @@ void	add_to_stash(t_list **stash, char *buf)
 		*stash = new_node;
 	else
 	{
-		last = ft_lst_get_last(*stash);
+		last = *stash;
+		while (last && last->next)
+			last = last->next;
 		last->next = new_node;
 	}
 }

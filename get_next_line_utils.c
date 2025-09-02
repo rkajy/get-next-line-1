@@ -6,7 +6,7 @@
 /*   By: radandri <radandri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/23 17:29:30 by radandri          #+#    #+#             */
-/*   Updated: 2025/09/02 17:46:44 by radandri         ###   ########.fr       */
+/*   Updated: 2025/09/02 20:35:34 by radandri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,16 +54,6 @@ char	*ft_strdup(const char *s1)
 	return (res);
 }
 
-t_list	*ft_lst_get_last(t_list *stash)
-{
-	t_list	*current;
-
-	current = stash;
-	while (current && current->next)
-		current = current->next;
-	return (current);
-}
-
 void	free_stash(t_list *stash)
 {
 	t_list	*current;
@@ -79,37 +69,46 @@ void	free_stash(t_list *stash)
 	}
 }
 
-t_list	*clean_stash(t_list *stash)
+char	*dup_after_newline(t_list *stash)
 {
-	t_list	*new_stash;
 	t_list	*cur;
 	int		i;
-	char	*leftover;
 
-	new_stash = NULL;
 	cur = stash;
 	while (cur)
 	{
-		i = -1;
-		while (cur->content && cur->content[++i])
+		i = 0;
+		while (cur->content && cur->content[i])
 		{
 			if (cur->content[i] == '\n')
 			{
 				if (cur->content[i + 1] != '\0')
-				{
-					leftover = ft_strdup(cur->content + i + 1);
-					if (!leftover)
-						return (free_stash(stash), NULL);
-					new_stash = (t_list *)malloc(sizeof(t_list));
-					if (!new_stash)
-						return (free(leftover), free_stash(stash), NULL);
-					new_stash->content = leftover;
-					new_stash->next = NULL;
-				}
-				return (free_stash(stash), new_stash);
+					return (ft_strdup(cur->content + i + 1));
+				return (NULL);
 			}
+			i++;
 		}
 		cur = cur->next;
 	}
-	return (free_stash(stash), NULL);
+	return (NULL);
+}
+
+t_list	*clean_stash(t_list *stash)
+{
+	t_list	*new_stash;
+	char	*leftover;
+
+	leftover = dup_after_newline(stash);
+	free_stash(stash);
+	if (!leftover)
+		return (NULL);
+	new_stash = malloc(sizeof(t_list));
+	if (!new_stash)
+	{
+		free(leftover);
+		return (NULL);
+	}
+	new_stash->content = leftover;
+	new_stash->next = NULL;
+	return (new_stash);
 }
