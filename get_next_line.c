@@ -6,7 +6,7 @@
 /*   By: radandri <radandri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/23 17:28:15 by radandri          #+#    #+#             */
-/*   Updated: 2025/09/02 14:27:15 by radandri         ###   ########.fr       */
+/*   Updated: 2025/09/02 14:53:09 by radandri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,7 @@ void	add_to_stash(t_list **stash, char *buf)
 	new_node->content = ft_strdup(buf);
 	new_node->next = NULL;
 	if (new_node->content == NULL)
-	{
-		free(new_node);
-		return ;
-	}
+		return (free(new_node));
 	i = 0;
 	while (buf[i])
 	{
@@ -103,8 +100,6 @@ char	*extract_line(t_list *stash)
 	int		j;
 	char	*line;
 
-	if (stash == NULL)
-		return (NULL);
 	line = generate_line(stash);
 	if (line == NULL)
 		return (NULL);
@@ -125,80 +120,6 @@ char	*extract_line(t_list *stash)
 	}
 	line[j] = '\0';
 	return (line);
-}
-
-t_list	*ft_lst_get_last(t_list *stash)
-{
-	t_list	*current;
-
-	current = stash;
-	while (current && current->next)
-		current = current->next;
-	return (current);
-}
-
-void	free_stash(t_list *stash)
-{
-	t_list	*current;
-	t_list	*next;
-
-	current = stash;
-	while (current)
-	{
-		free(current->content);
-		next = current->next;
-		free(current);
-		current = next;
-	}
-}
-
-int	found_newline(t_list *stash)
-{
-	int		i;
-	t_list	*current;
-
-	if (stash == NULL)
-		return (0);
-	current = ft_lst_get_last(stash);
-	i = 0;
-	while (current->content[i])
-	{
-		if (current->content[i] == '\n')
-			return (1);
-		i++;
-	}
-	return (0);
-}
-
-t_list	*clean_stash(t_list *stash)
-{
-	t_list	*new_stash;
-	t_list	*temp;
-	int		pos;
-	char	*leftover;
-
-	new_stash = NULL;
-	if (stash == NULL)
-		return (NULL);
-	temp = ft_lst_get_last(stash);
-	pos = 0;
-	while (temp->content[pos] && temp->content[pos] != '\n')
-		pos++;
-	if (temp->content[pos] == '\n' && temp->content[pos + 1] != '\0')
-	{
-		leftover = ft_strdup(temp->content + pos + 1);
-		if (leftover == NULL)
-			return (NULL);
-		new_stash = malloc(sizeof(t_list));
-		if (new_stash == NULL)
-		{
-			return (free(leftover), NULL);
-		}
-		new_stash->content = leftover;
-		new_stash->next = NULL;
-	}
-	free_stash(stash);
-	return (new_stash);
 }
 
 char	*get_next_line(int fd)

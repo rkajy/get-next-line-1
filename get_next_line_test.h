@@ -6,14 +6,12 @@
 /*   By: radandri <radandri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 21:40:52 by radandri          #+#    #+#             */
-/*   Updated: 2025/09/01 17:45:36 by radandri         ###   ########.fr       */
+/*   Updated: 2025/09/02 14:55:26 by radandri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-//for test
+// for test
 #ifndef GET_NEXT_LINE_TEST_H
 # define GET_NEXT_LINE_TEST_H
-
-
-# define file "test_file.txt"
+# define FILE_TEST "test_file.txt"
 #endif

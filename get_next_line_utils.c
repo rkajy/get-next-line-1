@@ -6,91 +6,28 @@
 /*   By: radandri <radandri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/23 17:29:30 by radandri          #+#    #+#             */
-/*   Updated: 2025/09/01 20:45:15 by radandri         ###   ########.fr       */
+/*   Updated: 2025/09/02 14:53:29 by radandri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-/**
- * @brief Fills the first `len` bytes of the memory area pointed to by `b`
- *        with the constant byte `c`.
- *
- * @param b Pointer to the memory area to be filled.
- * @param c The value to be set. It is passed as an int but is converted to
- *          an unsigned char.
- * @param len The number of bytes to be set to the value.
- * @return A pointer to the memory area `b`.
- */
-void	*ft_memset(void *b, int c, size_t len)
+int	found_newline(t_list *stash)
 {
-	char			*array;
-	unsigned char	copy;
-	int				i;
+	int		i;
+	t_list	*current;
 
-	array = (char *)(b);
-	copy = (unsigned char)c;
+	if (stash == NULL)
+		return (0);
+	current = ft_lst_get_last(stash);
 	i = 0;
-	while (i <= (int)len - 1)
+	while (current->content[i])
 	{
-		array[i] = copy;
+		if (current->content[i] == '\n')
+			return (1);
 		i++;
 	}
-	return (b);
-}
-
-/**
- * @brief Copies `len` bytes from memory area `src` to memory area `dst`.
- *        The memory areas may overlap; the copy is performed in a way
- *        that ensures the original data in `src` is copied correctly.
- *
- * @param dst Pointer to the destination memory area.
- * @param src Pointer to the source memory area.
- * @param len Number of bytes to copy.
- * @return A pointer to the destination memory area (`dst`).
- *
- * @note If both `dst` and `src` are NULL, the function returns NULL.
- *       The function handles overlapping memory areas by copying
- *       backwards if `dst` is located after `src`.
- */
-void	*ft_memmove(void *dst, const void *src, size_t len)
-{
-	char	*cdest;
-	char	*csrc;
-	size_t	i;
-
-	cdest = (char *)dst;
-	csrc = (char *)src;
-	if (!dst && !src)
-		return (NULL);
-	if (cdest > csrc)
-	{
-		while (len > 0)
-		{
-			len--;
-			cdest[len] = csrc[len];
-		}
-		return (dst);
-	}
-	i = 0;
-	while (i < len)
-	{
-		cdest[i] = csrc[i];
-		i++;
-	}
-	return (dst);
-}
-
-int	ft_strlen(const char *s)
-{
-	int	size;
-
-	size = 0;
-	while (s[size] != '\0')
-	{
-		size++;
-	}
-	return (size);
+	return (0);
 }
 
 char	*ft_strdup(const char *s1)
@@ -99,7 +36,9 @@ char	*ft_strdup(const char *s1)
 	size_t	i;
 	char	*res;
 
-	s1_len = ft_strlen(s1);
+	s1_len = 0;
+	while (s1[s1_len] != '\0')
+		s1_len++;
 	i = 0;
 	res = (char *)malloc(sizeof(char) * (s1_len + 1));
 	if (!res)
@@ -113,4 +52,58 @@ char	*ft_strdup(const char *s1)
 	}
 	res[i] = '\0';
 	return (res);
+}
+
+t_list	*ft_lst_get_last(t_list *stash)
+{
+	t_list	*current;
+
+	current = stash;
+	while (current && current->next)
+		current = current->next;
+	return (current);
+}
+
+void	free_stash(t_list *stash)
+{
+	t_list	*current;
+	t_list	*next;
+
+	current = stash;
+	while (current)
+	{
+		free(current->content);
+		next = current->next;
+		free(current);
+		current = next;
+	}
+}
+
+t_list	*clean_stash(t_list *stash)
+{
+	t_list	*new_stash;
+	t_list	*temp;
+	int		pos;
+	char	*leftover;
+
+	new_stash = NULL;
+	if (stash == NULL)
+		return (NULL);
+	temp = ft_lst_get_last(stash);
+	pos = 0;
+	while (temp->content[pos] && temp->content[pos] != '\n')
+		pos++;
+	if (temp->content[pos] == '\n' && temp->content[pos + 1] != '\0')
+	{
+		leftover = ft_strdup(temp->content + pos + 1);
+		if (leftover == NULL)
+			return (NULL);
+		new_stash = malloc(sizeof(t_list));
+		if (new_stash == NULL)
+			return (free(leftover), NULL);
+		new_stash->content = leftover;
+		new_stash->next = NULL;
+	}
+	free_stash(stash);
+	return (new_stash);
 }
