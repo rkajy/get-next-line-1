@@ -6,7 +6,7 @@
 /*   By: radandri <radandri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/23 17:28:15 by radandri          #+#    #+#             */
-/*   Updated: 2025/09/02 14:53:09 by radandri         ###   ########.fr       */
+/*   Updated: 2025/09/02 15:11:38 by radandri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,12 +134,12 @@ char	*get_next_line(int fd)
 	line = NULL;
 	readed = read_and_stash(fd, &stash);
 	if (readed == -1)
-		return (NULL);
+		return (free_stash(stash), stash = NULL, NULL);
 	if (stash == NULL)
 		return (NULL);
 	line = extract_line(stash);
 	stash = clean_stash(stash);
-	if (line[0] == '\0')
+	if (!line || line[0] == '\0')
 	{
 		free_stash(stash);
 		stash = NULL;
