@@ -6,7 +6,7 @@
 /*   By: radandri <radandri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/23 17:29:30 by radandri          #+#    #+#             */
-/*   Updated: 2025/09/02 14:53:29 by radandri         ###   ########.fr       */
+/*   Updated: 2025/09/02 17:04:44 by radandri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,13 +19,15 @@ int	found_newline(t_list *stash)
 
 	if (stash == NULL)
 		return (0);
-	current = ft_lst_get_last(stash);
+	current = stash;
 	i = 0;
-	while (current->content[i])
+	while (current)
 	{
-		if (current->content[i] == '\n')
-			return (1);
-		i++;
+		i = 0;
+		while (current->content && current->content[i])
+			if (current->content[i++] == '\n')
+				return (1);
+		current = current->next;
 	}
 	return (0);
 }
@@ -42,9 +44,7 @@ char	*ft_strdup(const char *s1)
 	i = 0;
 	res = (char *)malloc(sizeof(char) * (s1_len + 1));
 	if (!res)
-	{
 		return (NULL);
-	}
 	while (i < s1_len)
 	{
 		res[i] = s1[i];
