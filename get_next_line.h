@@ -6,7 +6,7 @@
 /*   By: radandri <radandri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/23 17:28:20 by radandri          #+#    #+#             */
-/*   Updated: 2025/09/02 20:36:08 by radandri         ###   ########.fr       */
+/*   Updated: 2025/09/03 13:36:33 by radandri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,10 @@
 # include <fcntl.h>  // for open
 # include <stdio.h>  // for FILE, remove for PUSH
 # include <stdlib.h> // for malloc, free
-// # include <sys/types.h> //
-// # include <sys/uio.h> // for read, write
 # include <unistd.h> // for read, write, close
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 42
+#  define BUFFER_SIZE 10
 # endif
 
 typedef struct s_list

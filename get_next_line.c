@@ -6,12 +6,31 @@
 /*   By: radandri <radandri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/23 17:28:15 by radandri          #+#    #+#             */
-/*   Updated: 2025/09/02 20:31:45 by radandri         ###   ########.fr       */
+/*   Updated: 2025/09/03 14:06:46 by radandri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
+/**
+ * @brief Adds a new node containing the given buffer content to the end of
+ * the stash list.
+ *
+ * This function creates a new node, duplicates the content of the provided
+ * buffer, and appends the new node to the end of the linked list pointed to
+ * by `stash`. If the buffer is NULL or memory allocation fails, the function
+ * safely exits.
+ *
+ * @param stash A double pointer to the head of the linked list (stash).
+ * If the list is empty, the new node becomes the head.
+ * @param buf A string buffer to be added to the stash. If NULL,
+ * the function does nothing.
+ *
+ * @note The function uses `ft_strdup` to duplicate the buffer content and
+ * assumes that `ft_strdup` is implemented elsewhere in the codebase.
+ * @note The caller is responsible for ensuring proper memory management of
+ * the stash list.
+ */
 void	add_to_stash(t_list **stash, char *buf)
 {
 	t_list	*last;
@@ -37,6 +56,18 @@ void	add_to_stash(t_list **stash, char *buf)
 	}
 }
 
+/**
+ * @brief Reads from the file descriptor and adds the data to the stash.
+ *
+ * This function reads data from the given file descriptor and appends it to
+ * the stash linked list. It stops reading when a newline is found or when
+ * there is no more data to read.
+ *
+ * @param fd The file descriptor to read from.
+ * @param stash_ptr A double pointer to the stash linked list.
+ *
+ * @return The number of bytes read, or -1 in case of an error.
+ */
 int	read_and_stash(int fd, t_list **stash_ptr)
 {
 	char	*buf;
@@ -60,6 +91,16 @@ int	read_and_stash(int fd, t_list **stash_ptr)
 	return (bytes_read);
 }
 
+/**
+ * @brief Allocates memory for a line from the stash.
+ *
+ * This function calculates the length of the line to be extracted from the
+ * stash and allocates memory for it.
+ *
+ * @param stash A pointer to the stash linked list.
+ *
+ * @return A pointer to the allocated line, or NULL in case of an error.
+ */
 char	*generate_line(t_list *stash)
 {
 	int		i;
@@ -89,6 +130,16 @@ char	*generate_line(t_list *stash)
 	return (line);
 }
 
+/**
+ * @brief Extracts a line from the stash.
+ *
+ * This function extracts a line from the stash linked list, stopping at the
+ * first newline character or the end of the stash.
+ *
+ * @param stash A pointer to the stash linked list.
+ *
+ * @return A pointer to the extracted line, or NULL in case of an error.
+ */
 char	*extract_line(t_list *stash)
 {
 	int		i;
@@ -117,13 +168,24 @@ char	*extract_line(t_list *stash)
 	return (line);
 }
 
+/**
+ * @brief Reads the next line from a file descriptor.
+ *
+ * This function reads the next line from the given file descriptor, using a
+ * static stash to store intermediate data between calls.
+ *
+ * @param fd The file descriptor to read from.
+ *
+ * @return A pointer to the next line, or NULL if there are no more lines or
+ * in case of an error.
+ */
 char	*get_next_line(int fd)
 {
 	static t_list	*stash = NULL;
 	char			*line;
 	int				status;
 
-	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, &line, 0) < 0)
+	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
 	status = read_and_stash(fd, &stash);
 	if (status == -1)
